@@ -1,7 +1,7 @@
 
 
 class File:
-    def __init__(self, Path):
+    def __init__(self, Path: str):
         self.Path = Path
         self.FileRef = open(Path, "r")
         self.FileRef.close()
@@ -9,7 +9,7 @@ class File:
     def __del__(self):
         self.Close()
         
-    def Open(self, Mode):
+    def Open(self, Mode: str):
         if self.IsClosed():          
             self.FileRef = open(self.Path, Mode)
             print(f"The File in {self.Path} | Got Opened Successfully")
@@ -37,7 +37,7 @@ class File:
     def IsClosed(self):
         return self.FileRef.closed            
         
-    def ChangePath(self, Path):
+    def ChangePath(self, Path: str):
         self.Close()
         self.Path = Path
 
@@ -50,25 +50,25 @@ class File:
     def GetMode(self):
         return self.FileRef.mode
 
-    def WriteOverride(self, Data):
+    def WriteOverride(self, Data: str):
         self.Open("w")
         self.FileRef.write(Data)
         if not(self.IsWritable()):
             print(f"Couldn't write to file in path {self.Path}")
    
-    def WriteAppend(self, Data):
+    def WriteAppend(self, Data: str):
         self.Open("a")
         self.FileRef.write(Data)
         if not(self.IsWritable()):
             print(f"Couldn't write to file in path {self.Path}")
         
-    def WriteLineOverride(self, Data):
+    def WriteLineOverride(self, Data: str):
         self.Open("w")
         self.FileRef.write(Data + "\n")
         if not(self.IsWritable()):
             print(f"Couldn't write to file in path {self.Path}")
    
-    def WriteLineAppend(self, Data):
+    def WriteLineAppend(self, Data: str):
         self.Open("a")
         self.FileRef.write(Data + "\n")
         if not(self.IsWritable()):
@@ -76,7 +76,7 @@ class File:
         
         
     
-    def Read(self, Data):
+    def Read(self):
         self.Open("r")
         return self.FileRef.read()
     
