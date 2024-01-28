@@ -1,10 +1,6 @@
 from file import *
+from ItemMeds import *
 
-
-
-# ID
-# Name
-# Price
 
 class DataEntry:
     def __init__(self, Path):
@@ -15,4 +11,5 @@ class DataEntry:
     def __del__(self):        
         self.FileRef.Close()
         
-    def FindId(self):
+    def FindId(self, Medicament):
+        
