@@ -1,8 +1,5 @@
 
 
-from io import TextIOWrapper
-
-
 class File:
     def __init__(self, Path):
         self.Path = Path
@@ -10,7 +7,6 @@ class File:
         self.FileRef.close()
 
     def __del__(self):
-        print("Destructed")
         self.Close()
         
     def Open(self, Mode):
