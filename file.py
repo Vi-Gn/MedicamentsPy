@@ -80,8 +80,11 @@ class File:
         self.Open("r")
         return self.FileRef.read()
     
-    def ReadLine(self, Data):
+    def ReadLine(self) -> str:
         self.Open("r")
-        return self.FileRef.readline()
+        temp = self.FileRef.readline()
+        if temp == "":
+            return "heelp"
+        return temp
 
 
