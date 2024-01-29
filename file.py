@@ -1,10 +1,13 @@
-
+from Log import *
 
 class File:
-    def __init__(self, Path: str):
+    def __init__(self, Path: str, DebugMode : bool = False):
         self.Path = Path
         self.FileRef = open(Path, "r")
         self.FileRef.close()
+        self.DebugMode = DebugMode
+        if(self.DebugMode):
+            Warning("File is running debug mode.")
 
     def __del__(self):
         self.Close()
@@ -12,26 +15,31 @@ class File:
     def Open(self, Mode: str):
         if self.IsClosed():          
             self.FileRef = open(self.Path, Mode)
-            print(f"The File in {self.Path} | Got Opened Successfully")
+            if(self.DebugMode):
+                Info(f"The File in {self.Path} | Got Opened Successfully")
             return 
         
         elif self.GetMode() == Mode:
-            print(f"The File in {self.Path} | Is Already Opened")
+            if(self.DebugMode):
+                Info(f"The File in {self.Path} | Is Already Opened")
             return
           
         else: # elif self.GetMode() != Mode:
             temp = self.GetMode()
             self.Close()
             self.FileRef = open(self.Path, Mode)
-            print(f"The File in {self.Path} | Got Opened Successfully Toggled From '{temp}' mode to '{Mode}'")
+            if(self.DebugMode):
+                Info(f"The File in {self.Path} | Got Opened Successfully Toggled From '{temp}' mode to '{Mode}'")
 
         
     def Close(self):
         if self.FileRef.closed:
-            print(f"The File in {self.Path} | Is Already Closed")
+            if(self.DebugMode):
+                Info(f"The File in {self.Path} | Is Already Closed")
             return 
         self.FileRef.close()
-        print(f"The File in {self.Path} | Got Closed Successfully")
+        if(self.DebugMode):
+            Info(f"The File in {self.Path} | Got Closed Successfully")
     
     
     def IsClosed(self):
@@ -54,37 +62,38 @@ class File:
         self.Open("w")
         self.FileRef.write(Data)
         if not(self.IsWritable()):
-            print(f"Couldn't write to file in path {self.Path}")
+            Error(f"Couldn't write to file in path {self.Path}")
    
     def WriteAppend(self, Data: str):
         self.Open("a")
         self.FileRef.write(Data)
         if not(self.IsWritable()):
-            print(f"Couldn't write to file in path {self.Path}")
+            Error(f"Couldn't write to file in path {self.Path}")
         
     def WriteLineOverride(self, Data: str):
         self.Open("w")
         self.FileRef.write(Data + "\n")
         if not(self.IsWritable()):
-            print(f"Couldn't write to file in path {self.Path}")
+            Error(f"Couldn't write to file in path {self.Path}")
    
     def WriteLineAppend(self, Data: str):
         self.Open("a")
         self.FileRef.write(Data + "\n")
         if not(self.IsWritable()):
-            print(f"Couldn't write to file in path {self.Path}")
+            Error(f"Couldn't write to file in path {self.Path}")
         
         
-    
     def Read(self):
         self.Open("r")
         return self.FileRef.read()
     
-    def ReadLine(self) -> str:
+    def ReadLine(self, log: bool = False) -> str:
         self.Open("r")
         temp = self.FileRef.readline()
         if temp == "":
-            return "heelp"
+            Warning("This file has reached the end line")
+        if log:
+            Log(temp, end="")
         return temp
 
-
+    
