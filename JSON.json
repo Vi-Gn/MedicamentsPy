@@ -1,0 +1,28 @@
+{
+    "Meds": [
+        {
+            "id": 1,
+            "name": "doliprane",
+            "Price": 20,
+            "Quantity": 150
+        },
+        {
+            "id": 2,
+            "name": "Aspro",
+            "Price": 15,
+            "Quantity": 90
+        },
+        {
+            "id": 3,
+            "name": "Supradine",
+            "Price": 36,
+            "Quantity": 250
+        },
+        {
+            "id": 4,
+            "name": "doli",
+            "Price": 18,
+            "Quantity": 50
+        }
+    ]
+}

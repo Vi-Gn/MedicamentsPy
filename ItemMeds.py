@@ -7,6 +7,8 @@ class Medicament:
         self.Name = ""
         self.Price = -1
         self.Refs = [Medicament]
+        self.Data = {}
 
-    def LoadMeds
+        
+
 
