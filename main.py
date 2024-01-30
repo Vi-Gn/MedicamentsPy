@@ -14,7 +14,7 @@ if __name__ == '__main__':
     D = DataManager()
     D.AddItemToFile("Dol", 20, 300)
     D.AddItemToFile("DP", 250, 30)
-
+    D.RemoveItemByName("DP")
 
     # F = File("Database/MedicsData.txt")
     # # F.WriteLineAppend("dsd")

@@ -40,4 +40,14 @@ class DataManager:
         
 
     def RemoveItemByName(self, MedName: str,  KeyName: str = "Meds"):
-        
+        Currentdata = self.GetData()
+        count = len(Currentdata[KeyName])
+        if count == 0:
+            return False
+        else:
+            for i in range(count):
+                if MedName in Currentdata[KeyName][i]["name"]:
+                    del Currentdata[KeyName][i]
+                    self.File = open(self.Path, "w")
+                    json.dump(Currentdata, self.File, indent=4)
+                    self.File.close()

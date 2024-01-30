@@ -8,9 +8,9 @@
         },
         {
             "id": 2,
-            "name": "DP",
-            "Price": 250,
-            "Quantity": 30
+            "name": "Dol",
+            "Price": 20,
+            "Quantity": 300
         },
         {
             "id": 3,
@@ -20,9 +20,9 @@
         },
         {
             "id": 4,
-            "name": "DP",
-            "Price": 250,
-            "Quantity": 30
+            "name": "Dol",
+            "Price": 20,
+            "Quantity": 300
         },
         {
             "id": 5,
@@ -32,9 +32,27 @@
         },
         {
             "id": 6,
-            "name": "DP",
-            "Price": 250,
-            "Quantity": 30
+            "name": "Dol",
+            "Price": 20,
+            "Quantity": 300
+        },
+        {
+            "id": 7,
+            "name": "Dol",
+            "Price": 20,
+            "Quantity": 300
+        },
+        {
+            "id": 8,
+            "name": "Dol",
+            "Price": 20,
+            "Quantity": 300
+        },
+        {
+            "id": 10,
+            "name": "Dol",
+            "Price": 20,
+            "Quantity": 300
         }
     ]
 }
