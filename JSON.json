@@ -2,27 +2,39 @@
     "Meds": [
         {
             "id": 1,
-            "name": "doliprane",
+            "name": "Dol",
             "Price": 20,
-            "Quantity": 150
+            "Quantity": 300
         },
         {
             "id": 2,
-            "name": "Aspro",
-            "Price": 15,
-            "Quantity": 90
+            "name": "DP",
+            "Price": 250,
+            "Quantity": 30
         },
         {
             "id": 3,
-            "name": "Supradine",
-            "Price": 36,
-            "Quantity": 250
+            "name": "Dol",
+            "Price": 20,
+            "Quantity": 300
         },
         {
             "id": 4,
-            "name": "doli",
-            "Price": 18,
-            "Quantity": 50
+            "name": "DP",
+            "Price": 250,
+            "Quantity": 30
+        },
+        {
+            "id": 5,
+            "name": "Dol",
+            "Price": 20,
+            "Quantity": 300
+        },
+        {
+            "id": 6,
+            "name": "DP",
+            "Price": 250,
+            "Quantity": 30
         }
     ]
 }
