@@ -5,7 +5,7 @@ def Info(msg: str = ""):
 def Trace(msg: str = ""):
     print("\n\nTraces  : " + msg + "\n")
 
-def Warning(msg: str = ""):
+def Warn(msg: str = ""):
     print("\n\nWarning : " + msg + "\n")
 
 def Error(msg: str = ""):

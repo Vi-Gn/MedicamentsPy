@@ -7,7 +7,7 @@ class File:
         self.FileRef.close()
         self.DebugMode = DebugMode
         if(self.DebugMode):
-            Warning("File is running debug mode.")
+            Warn("File is running debug mode.")
 
     def __del__(self):
         self.Close()
@@ -91,7 +91,7 @@ class File:
         self.Open("r")
         temp = self.FileRef.readline()
         if temp == "":
-            Warning("This file has reached the end line")
+            Warn("This file has reached the end line")
         if log:
             Log(temp, end="")
         return temp

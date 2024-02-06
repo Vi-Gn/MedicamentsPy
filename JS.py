@@ -1,6 +1,7 @@
 import json
+from Log import *
 
-D = { "id": 1, "name": "doliprane", "Price": 20, "Quantity": 150 }
+
 class DataManager:
     def __init__(self, Path: str = "JSON.json"):
         self.Path = Path
@@ -25,7 +26,13 @@ class DataManager:
     #     Currentdata = self.GetData()
     #     DataArray = list(Currentdata[KeyName])
     #     return DataArray
-    
+
+    def ReadItems(self, MedName: str, MedPrice: float, MedQuantity: int,  KeyName: str = "Meds"):
+        Currentdata = self.GetData()
+        for line in Currentdata[KeyName]:
+            Info("Item inserted at {Id}: id")
+
+
     def AddItemToFile(self, MedName: str, MedPrice: float, MedQuantity: int,  KeyName: str = "Meds"):
         Currentdata = self.GetData()
         count = len(Currentdata[KeyName])
@@ -37,9 +44,11 @@ class DataManager:
         self.File = open(self.Path, "w")
         json.dump(Currentdata, self.File, indent=4)
         self.File.close()
+        Info("Item inserted at {Id}: id")
         
 
     def RemoveItemByName(self, MedName: str,  KeyName: str = "Meds"):
+        found = False
         Currentdata = self.GetData()
         count = len(Currentdata[KeyName])
         if count == 0:
@@ -51,3 +60,45 @@ class DataManager:
                     self.File = open(self.Path, "w")
                     json.dump(Currentdata, self.File, indent=4)
                     self.File.close()
+                    found = True
+                    Info("Name : {MedName} has been removed successfully")
+        if not found: 
+            Warn("Item not found")
+
+    def RemoveItemById(self, Id: str,  KeyName: str = "Meds"):
+        found = False
+        Currentdata = self.GetData()
+        count = len(Currentdata[KeyName])
+        if count == 0:
+            return False
+        else:
+            for i in range(count):
+                if Id in Currentdata[KeyName][i]["id"]:
+                    del Currentdata[KeyName][i]
+                    self.File = open(self.Path, "w")
+                    json.dump(Currentdata, self.File, indent=4)
+                    self.File.close()
+                    found = True
+                    Info("Id : {Id} has been removed successfully")
+        if not found: 
+            Warn("Item not found")
+
+    def ModifyById(self, Id: str, MedName: str, MedPrice: float, MedQuantity: int,  KeyName: str = "Meds"):
+        found = False
+        Currentdata = self.GetData()
+        count = len(Currentdata[KeyName])
+        if count == 0:
+            return False
+        else:
+            for i in range(count):
+                if Id in Currentdata[KeyName][i]["id"]:
+                    Currentdata[KeyName][i]["name"] = MedName
+                    Currentdata[KeyName][i]["Price"] = MedPrice
+                    Currentdata[KeyName][i]["Quantity"] = MedQuantity
+                    self.File = open(self.Path, "w")
+                    json.dump(Currentdata, self.File, indent=4)
+                    self.File.close()
+                    found = True
+                    Info("Id : {Id} has been modified successfully")
+        if not found: 
+            Warn("Item not found")
