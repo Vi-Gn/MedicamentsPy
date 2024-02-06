@@ -5,6 +5,30 @@
             "name": "Dol",
             "Price": 20,
             "Quantity": 300
+        },
+        {
+            "id": 2,
+            "name": "Dolipran",
+            "Price": 20,
+            "Quantity": 50
+        },
+        {
+            "id": 3,
+            "name": "Aspro",
+            "Price": 10,
+            "Quantity": 20
+        },
+        {
+            "id": 4,
+            "name": "Dol",
+            "Price": 20,
+            "Quantity": 300
+        },
+        {
+            "id": 5,
+            "name": "NIKO",
+            "Price": 9999.0,
+            "Quantity": 1
         }
     ]
 }

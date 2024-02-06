@@ -27,10 +27,10 @@ class DataManager:
     #     DataArray = list(Currentdata[KeyName])
     #     return DataArray
 
-    def ReadItems(self, MedName: str, MedPrice: float, MedQuantity: int,  KeyName: str = "Meds"):
+    def ReadItems(self, KeyName: str = "Meds"):
         Currentdata = self.GetData()
         for line in Currentdata[KeyName]:
-            Info("Item inserted at {Id}: id")
+            Trace(str(line))
 
 
     def AddItemToFile(self, MedName: str, MedPrice: float, MedQuantity: int,  KeyName: str = "Meds"):
@@ -65,7 +65,7 @@ class DataManager:
         if not found: 
             Warn("Item not found")
 
-    def RemoveItemById(self, Id: str,  KeyName: str = "Meds"):
+    def RemoveItemById(self, Id,  KeyName: str = "Meds"):
         found = False
         Currentdata = self.GetData()
         count = len(Currentdata[KeyName])
@@ -83,7 +83,7 @@ class DataManager:
         if not found: 
             Warn("Item not found")
 
-    def ModifyById(self, Id: str, MedName: str, MedPrice: float, MedQuantity: int,  KeyName: str = "Meds"):
+    def ModifyById(self, Id, MedName: str, MedPrice: float, MedQuantity: int,  KeyName: str = "Meds"):
         found = False
         Currentdata = self.GetData()
         count = len(Currentdata[KeyName])
@@ -91,7 +91,7 @@ class DataManager:
             return False
         else:
             for i in range(count):
-                if Id in Currentdata[KeyName][i]["id"]:
+                if Id == Currentdata[KeyName][i]["id"]:
                     Currentdata[KeyName][i]["name"] = MedName
                     Currentdata[KeyName][i]["Price"] = MedPrice
                     Currentdata[KeyName][i]["Quantity"] = MedQuantity
