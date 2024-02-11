@@ -55,7 +55,7 @@ class DataManager:
             return False
         else:
             for i in range(count):
-                if MedName in Currentdata[KeyName][i]["name"]:
+                if MedName == Currentdata[KeyName][i]["name"]:
                     del Currentdata[KeyName][i]
                     self.File = open(self.Path, "w")
                     json.dump(Currentdata, self.File, indent=4)
@@ -73,7 +73,7 @@ class DataManager:
             return False
         else:
             for i in range(count):
-                if Id in Currentdata[KeyName][i]["id"]:
+                if Id == Currentdata[KeyName][i]["id"]:
                     del Currentdata[KeyName][i]
                     self.File = open(self.Path, "w")
                     json.dump(Currentdata, self.File, indent=4)
