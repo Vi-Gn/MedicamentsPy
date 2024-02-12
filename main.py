@@ -1,5 +1,6 @@
 import tkinter
 from tkinter import filedialog
+from csvLib.csvLib import *
 from file import *
 from JS import *
 from Application import *
@@ -83,6 +84,7 @@ def SaveToFile():
 
 if __name__ == '__main__':
 
+    PrintCSV()
 
     app = Tk()
     app.title(name)
