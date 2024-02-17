@@ -1,6 +1,6 @@
 import tkinter
 from tkinter import filedialog
-from csvLib.csvLib import *
+# from csvLib.csvLib import *
 from file import *
 from JS import *
 from Application import *
@@ -70,7 +70,6 @@ def OpenNewFile():
         tree.insert('', END, values=contact)
 
 def SaveToFile():
-    # tempApp = Toplevel(app)
     path = filedialog.asksaveasfilename()
     print(path)
     DataRef = DataManager(path)
@@ -84,8 +83,6 @@ def SaveToFile():
 
 if __name__ == '__main__':
 
-    PrintCSV()
-
     app = Tk()
     app.title(name)
 
@@ -97,11 +94,20 @@ if __name__ == '__main__':
     filemenu.add_separator()
     filemenu.add_command(label="Exit", command=app.quit)
     menu.add_cascade(label="File", menu=filemenu)
+
+
+    filemenu1 = Menu(menu, tearoff=0)
+    menu.add_cascade(label="Edit", menu=filemenu1)
+    filemenu1.add_command(label="AddItem", command=NewFile)
+    filemenu1.add_command(label="RemoveItem", command=OpenNewFile)
+    filemenu1.add_command(label="ModifyItem", command=SaveToFile)
+    filemenu1.add_command(label="ReReadItem", command=SaveToFile)
+
     app.config(menu=menu)
 
     # btn = Button(app, text='Click', anchor="center", command=spawn)
-    btn = Button(app, text='Click', anchor="w" , command=spawn)
-    btn.grid(row=0, column=0, )
+    btn = Button(app, text='Click' , command=spawn)
+    btn.grid(row=0, column=0)
   
     tree = Treeview(app,columns=columns, show="headings")
     for val in columns:

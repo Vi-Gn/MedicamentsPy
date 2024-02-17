@@ -4,27 +4,29 @@ StructMeds = {'id': -1, 'name': "None", 'quantity': -1, 'price': -1}
 
 
 
-def GetLastIndex():
-  with open('data.csv', 'r') as csv_file:
+def GetLastIndex(path: str = 'data.csv'):
+  with open(path, 'r') as csv_file:
     csv_reader = csv.DictReader(csv_file)
     Med = list(csv_reader)
     return Med[-1]['id']
 
-def ReadCSV():
-  with open('data.csv', 'r') as csv_file:
+def ReadCSV(path: str = 'data.csv'):
+  with open(path, 'r') as csv_file:
     csv_reader = csv.DictReader(csv_file)
     Med = list(csv_reader)
     return Med
 
 
-def PrintCSV():
-  with open('data.csv', 'r') as csv_file:
+
+
+def PrintCSV(path: str = 'data.csv'):
+  with open(path, 'r') as csv_file:
     csv_reader = csv.DictReader(csv_file)
     for line in csv_reader:
       print(line)
 
-def FindMedByName(name: str):
-  with open('data.csv', 'r') as csv_file:
+def FindMedByName(name: str, path: str = 'data.csv'):
+  with open(path, 'r') as csv_file:
     csv_reader = csv.DictReader(csv_file)
     for line in csv_reader:
       if line['name'] == name:
@@ -101,7 +103,7 @@ def RowList(index: int = 0):
 
 # print(GetLastIndex())
 # print(RowList(1))
-AddRow(name="bttikh", quantity=20, price=46)
+# AddRow(name="bttikh", quantity=20, price=46)
 # PrintCSV()
 # ModifyId(1, quantity=400)
 
