@@ -19,11 +19,19 @@ def ClearTable():
     for i in ap.treeTable.get_children():
         ap.treeTable.delete(i)
 
+def ClearFileTable():
+    for i in ap.treeFile.get_children():
+        ap.treeFile.delete(i)
+
 def NewDir():
-    
-    ap.workdir = filedialog.askdirectory()
+    # os.path.abspath(f"../{self.workdirName}")
+    ap.workdir = filedialog.askdirectory().replace("/", "\\")
+    # ap.workdir.replace("\\", "/")
+
     ap.app.title(ap.title + "         " + ap.workdir)
-    print(ap.workdir)
+    ClearFileTable()
+    ap.InitDir()
+    print(ap.workdir, '-----------------')
 
 def NewFile():
     ap.file = filedialog.askopenfilename(initialdir=ap.workdir)
@@ -134,7 +142,6 @@ class TableApplication:
         # for i in self.files:
         #     print(i)
         # print(self.workdir)
-
         files: list[str] = []
         for i in list_folders_files(self.workdir):
             temp = i.replace(os.path.abspath("..\\")+"\\", "")
