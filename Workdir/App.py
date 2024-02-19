@@ -23,15 +23,15 @@ def ClearFileTable():
     for i in ap.treeFile.get_children():
         ap.treeFile.delete(i)
 
-def NewDir():
-    # os.path.abspath(f"../{self.workdirName}")
-    ap.workdir = filedialog.askdirectory().replace("/", "\\")
-    # ap.workdir.replace("\\", "/")
-
-    ap.app.title(ap.title + "         " + ap.workdir)
-    ClearFileTable()
-    ap.InitDir()
-    # print(ap.workdir, '-----------------')
+# def NewDir():
+#     # os.path.abspath(f"../{self.workdirName}")
+#     ap.workdir = filedialog.askdirectory()
+#     # ap.workdir.replace("\\", "/")
+#     ap.app.title(ap.title + "         " + ap.workdir)
+#     ClearFileTable()
+#     OpenDirLoaded(ap.workdir)
+#     ap.InitDir()
+#     # print(ap.workdir, '-----------------')
 
 def NewFile():
     ap.file = filedialog.askopenfilename(initialdir=ap.workdir)
@@ -58,11 +58,19 @@ def OpenFile(path: str = ''):
     for contact in list(data1):
         ap.treeTable.insert('', END, values=contact)
 
-def OpenDirLoaded():
-    # path = filedialog.askdirectory(initialdir=ap.workdir)
-    path = os.path.abspath('..\\')
-    node_id = ap.treeFile.insert('', "end", text=ap.workdirName, values= path ,open=False)
-    OpenDir(node_id)
+def OpenDirLoaded(dirNAme: str = ''):
+    path = filedialog.askdirectory(initialdir=ap.workdir)
+    if path == '':
+        path = os.path.abspath('')
+    
+    
+    ClearFileTable()
+  
+    if dirNAme == '':
+        dirName = path.split("/")[-1]
+    # path = os.path.abspath('')
+    node_id = ap.treeFile.insert('', "end", text=dirName, values= path ,open=False)
+    OpenDir(node_id, path)
 
 def OpenDir(node = '', path = os.path.abspath('..\\Workdir')):
     # Iterate over directories in the current path
@@ -92,8 +100,8 @@ class TableApplication:
         self.app.title(self.title)
         self.app.iconbitmap(iconPath)
         self.app.geometry(self.resolution)
-        # self.app.minsize(width= 800, height= 450)
-        # self.app.maxsize(width= 895, height= 450)
+        self.app.minsize(width= 680, height= 450)
+        # self.app.maxsize(width= 680, height= 450)
         self.workdirName = 'Workdir'
         self.workdir = os.path.abspath(f"../{self.workdirName}")
         self.fileName = 'Data/data.csv'
@@ -144,7 +152,6 @@ class TableApplication:
         menu = Menu(self.app)
         filemenu = Menu(menu, tearoff=0)
         filemenu.add_command(label="New File", command=NewFile)
-        filemenu.add_command(label="New Directory", command=NewDir)
         filemenu.add_command(label="Open File", command=OpenFile)
         filemenu.add_command(label="Open Directory", command=OpenDirLoaded)
         filemenu.add_command(label="Save File", command='''SaveFile''')
@@ -179,24 +186,24 @@ class TableApplication:
 
         
     def InitDir(self):
+        0
+        # files: list[str] = []
+        # for i in list_folders_files(self.workdir):
+        #     temp = i.replace(os.path.abspath("..\\")+"\\", "")
+        #     temp = temp.replace("\\", "/")
+        #     files.append(temp)
+        # filesArr: list[str]= []
+        # for i in files:
+        #     if i.endswith('.csv'):
+        #         filesArr.append(i.split("/"))
         
-
-        files: list[str] = []
-        for i in list_folders_files(self.workdir):
-            temp = i.replace(os.path.abspath("..\\")+"\\", "")
-            temp = temp.replace("\\", "/")
-            files.append(temp)
-        filesArr: list[str]= []
-        for i in files:
-            if i.endswith('.csv'):
-                filesArr.append(i.split("/"))
         
+        # # print(filesArr)
+        # # self.treeFile.insert(parent="",index='end', text=filesArr[0][0], values='', iid=0)
+        # # self.treeFile.insert(parent=0,index='end', text=filesArr[0][1], values='', iid=1)
+        # # self.treeFile.insert(parent=1,index='end', text=filesArr[0][2], values='', iid=2)
+        # # self.treeFile.insert(parent=1,index='end', text=filesArr[1][2], values='', iid=3)
         
-        # print(filesArr)
-        # self.treeFile.insert(parent="",index='end', text=filesArr[0][0], values='', iid=0)
-        # self.treeFile.insert(parent=0,index='end', text=filesArr[0][1], values='', iid=1)
-        # self.treeFile.insert(parent=1,index='end', text=filesArr[0][2], values='', iid=2)
-        # self.treeFile.insert(parent=1,index='end', text=filesArr[1][2], values='', iid=3)
 
     def FileManager(self, columns: tuple[str] = ('#0')):
         self.frameFile = Frame(self.mainFrame, width = 150)
@@ -204,7 +211,6 @@ class TableApplication:
         self.treeFile.bind("<<TreeviewSelect>>", self.get_selected_item_File)
 
         self.treeFile.heading(column='#0', text='File',anchor="center")
-        
         scrollbarV = Scrollbar(self.frameFile, orient=VERTICAL, command=self.treeFile.yview)
         self.treeFile.configure(yscroll=scrollbarV.set)
         scrollbarV.pack(fill="both", side=RIGHT)
@@ -216,7 +222,7 @@ class TableApplication:
         self.treeFile.pack(fill="both", padx=5, pady=5, expand=1)
         self.frameFile.grid(row=0, column=0, sticky=NSEW)
         self.InitDir()
-        OpenDir()
+        OpenDirLoaded()
         self.InitFile()
         
     def get_selected_item_Data(self, event):        
@@ -233,6 +239,7 @@ class TableApplication:
             if len(children) == 0:
                 if(str(item_text).endswith(".csv")):
                     print("Openning file:", item_text)
+                    print(item)
                     OpenFile(item_text)
                 else:
                     print("Can't open file:", item_text)
@@ -245,7 +252,11 @@ class TableApplication:
         for val in columns:
             newVal = val.replace('_',' ').upper()
             self.treeTable.heading(column=val, text=newVal,anchor=CENTER)
-            
+        self.treeTable.column('id', width = 50, stretch = False, anchor="center")
+        # self.treeTable.column('name', minwidth = 100, stretch = False, anchor="w")
+        self.treeTable.column('quantity', width = 100, stretch = False, anchor="center")
+        self.treeTable.column('price', width = 100, stretch = False, anchor="center")
+        
         scrollbarV = Scrollbar(self.frametable, orient=VERTICAL, command=self.treeTable.yview)
         self.treeTable.configure(yscroll=scrollbarV.set)
         scrollbarV.pack(fill="y", side=RIGHT)
