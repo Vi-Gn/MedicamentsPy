@@ -60,8 +60,10 @@ def OpenFile(path: str = ''):
 
 def OpenDirLoaded(dirNAme: str = ''):
     path = filedialog.askdirectory(initialdir=ap.workdir)
-    if path == '':
-        path = os.path.abspath('')
+    
+        
+    # if path == '':
+        # path = os.path.abspath('')
     
     
     ClearFileTable()
@@ -71,21 +73,38 @@ def OpenDirLoaded(dirNAme: str = ''):
     # path = os.path.abspath('')
     node_id = ap.treeFile.insert('', "end", text=dirName, values= path ,open=False)
     OpenDir(node_id, path)
-
+err = NONE
 def OpenDir(node = '', path = os.path.abspath('..\\Workdir')):
     # Iterate over directories in the current path
-    for dir_name in os.listdir(path):
-        # print(dir_name)
-        dir_path = os.path.join(path, dir_name)
-        value = dir_path.replace('\\', '/')
+    try:
+        for dir_name in os.listdir(path):
+            dir_name.split('.')
+            # print(dir_name)
+            dir_path = os.path.join(path, dir_name)
+            value = dir_path.replace('\\', '/')
+            
+            # Add directory to the Treeview
+            node_id = ap.treeFile.insert(node, "end", text=dir_name, values= value ,open=False)
+            # If the current item is a directory, recursively populate its subdirectories
+            if os.path.isdir(dir_path):
+                OpenDir(node_id, dir_path)
+    except:
+        print(" folder not valid ")
+        global err
+        err = Toplevel(ap.app)
         
-        # Add directory to the Treeview
-        node_id = ap.treeFile.insert(node, "end", text=dir_name, values= value ,open=False)
-        # If the current item is a directory, recursively populate its subdirectories
-        if os.path.isdir(dir_path):
-            OpenDir(node_id, dir_path)
-  
+        err.grab_set()
+        err.protocol("WM_DELETE_WINDOW", empty)
+        errMessage = Label(err, text="Path invalid please retry!")
+        btn = Button(err,text='reload', command=lambda : [OpenDirLoaded(), err.destroy()])
+        btnClose = Button(err,text='exit', command=lambda : ap.app.destroy())
+        errMessage.pack(fill="both")
+        btn.pack(fill="both")
+        btnClose.pack(fill="both")
+        
 
+def empty():
+    0
 
 class TableApplication:
     def __init__(self, title: str, resX: int, resY: int, iconPath = 'Icon/meds.ico') -> None:
@@ -114,6 +133,15 @@ class TableApplication:
         self.mainFrame.grid_columnconfigure(1, weight=1)
         self.mainFrame.pack(fill="both", padx=5, pady=5, expand=1)
         
+
+    def add(self):
+        windowadd = Toplevel(self.app)
+        windowadd.geometry("600x400")
+        table = Treeview(windowadd, text="ById", columns=columns, show="headings")
+        for col in columns:
+            table.heading(column=col, text=col.upper)
+        table.insert('', END,)
+        table.pack(fill="both")
 
         
 
@@ -159,7 +187,7 @@ class TableApplication:
         filemenu.add_command(label="Exit", command=self.app.quit)
         menu.add_cascade(label="File", menu=filemenu)
         filemenu1 = Menu(menu, tearoff=0)
-        filemenu1.add_command(label="AddItem", command='')
+        filemenu1.add_command(label="AddItem", command=self.add)
         filemenu1.add_command(label="RemoveItem", command='')
         filemenu1.add_command(label="ModifyItem", command='')
         filemenu1.add_command(label="ReloadItems", command='')
