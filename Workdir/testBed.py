@@ -14,6 +14,7 @@ class App(tk.Tk):
 class Table(ttk.Treeview):
     def __init__(self, parent, columns = ('id', 'name', 'price', 'quantiity'), show ='headings'):
         super().__init__(master = parent, columns = columns, show = show, style='My.Treeview')
+        self.columns = columns
         for col in columns:
             self.heading(column=col, text=col, anchor='center')
         for col in columns:
@@ -47,7 +48,14 @@ class Table(ttk.Treeview):
                       background=[('active', '#eee')], 
                       foreground=[('active', '#333')])
 
-        parent.bind("<<TreeviewSelect>>", lambda event: root.focus_set())
+        parent.bind("<<TreeviewSelect>>", self.get_selection)
+
+    def get_selection(self, event=None):
+        selected_items = tree.selection()  # Get the IDs of selected items
+        for item in selected_items:
+            item_text = tree.item(item, "text")  # Get the text of each selected item
+            print("Selected item:", item_text)
+        # self.search.focus_force()
 
     def Append(self, parentId = '', values = ('1', 'Doli', '50', '25')):
         self.insert(parentId, tk.END, values=values)
@@ -55,11 +63,28 @@ class Table(ttk.Treeview):
     def Pack(self, fill='both', expand=True):
         self.pack(fill=fill, expand=expand)
 
-def get_selection(event=None):
-    selected_items = tree.selection()  # Get the IDs of selected items
-    for item in selected_items:
-        item_text = tree.item(item, "text")  # Get the text of each selected item
-        print("Selected item:", item_text)
+class Search(tk.Entry):
+    def __init__(self, parent, table: Table):
+        super().__init__(master=parent)
+        self.table = table
+        self.searchText = tk.StringVar(parent)
+        self.searchText.trace_add("write", self.callback)
+        self.search = tk.Entry(root, textvariable=self.searchText, foreground='#111', background='#eee')
+        self.search.pack(fill='both', expand=True)
+        # self.search.bind('<Return>', self.callback)
+
+    def callback(self, *event):
+        self.table.selection_remove(self.table.get_children())
+        for child in self.table.get_children():                
+            item = self.table.item(child)
+            values = item['values']
+            if(self.search.get() != '' and values[1].startswith(self.search.get())):
+                self.table.selection_add(child)
+
+        self.search.focus_force()
+        
+        
+
 
 # Create the main window
 
@@ -68,15 +93,16 @@ root = App()
 tree = Table(parent=root)
 
 tree.Append(values=('1', 'Doli', '50', '25'))
-tree.Append(values=('1', 'Doli', '50', '25'))
-tree.Append(values=('1', 'Doli', '50', '25'))
+tree.Append(values=('1', 'Aspro', '50', '25'))
+tree.Append(values=('1', 'mininon', '50', '25'))
 tree.Append(values=('1', 'Doli', '50', '25'))
 
-search = tk.Entry(root, foreground='#111', background='#eee')
-search.pack(fill='both', expand=True)
+searchBar = Search(root, tree)
 
-print(askyesno('Confirm', 'Do you want to save?'))
-print(askyesno('Confirm', 'Do you want to save?'))
+# search.bind("<Key>", )
+
+# print(askyesno('Confirm', 'Do you want to save?'))
+# print(askyesno('Confirm', 'Do you want to save?'))
 root.mainloop()
 
 
