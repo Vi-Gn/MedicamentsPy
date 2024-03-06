@@ -105,8 +105,8 @@ class RDB():
         return self.cursor.fetchone()
 
     def getColumnName(self):
-        temp = self.execLinesFetched('SHOW COLUMNS', f'FROM {self.table}')
-        del self.colnames
+        temp = self.execLinesFetched( f'SELECT name FROM PRAGMA_TABLE_INFO("{self.table}");')
+        
         self.colnames = []
         for elem in temp:
             self.colnames.append(elem[0])
@@ -349,8 +349,6 @@ class DataShower:
       for item in data.getData('price'):
             print(item)
       
-
-    
 class DataAdder:
   msgaddstock: str = '''
         1 - ref
@@ -400,8 +398,6 @@ class DataAdder:
         data.addQuantityByLabelle(labelle, quantity)
       case (0):
         return
-    
-    
     
 class DataModder:
   msgmodify: str = '''
@@ -578,7 +574,6 @@ class DataFinder:
         case (0):
           return
 
-
 class DataRemover:
   msgremove: str = '''
         1 - all
@@ -635,63 +630,54 @@ class DataRemover:
       case (0):
         return
         
-        
 
-# class DataAdder:
-#   @staticmethod
-#   def addMenu():
-#     print('''add''')
-#     labelle = input('Enter labelle')
-#     description = input('Enter description')
-#     quantity = int(input('Enter quantity'))
-#     price = float(input('Enter price'))
-#     data.insert(labelle, description, quantity, price)
-    
 
-data = RDB()
-data.createTable()
-# data.insert("Nothing", "I said it is nothing", 0, 0.0)
-# data.modifyRef(5, "fifth one modified", "Nodesc yet", 69, 6969)
+if __name__ == '__main__':
+  data = RDB('data/MedStocks.db')
+  data.createTable()
+
+  # data.insert("Nothing", "I said it is nothing", 0, 0.0)
+  # data.modifyRef(5, "fifth one modified", "Nodesc yet", 69, 6969)
+  print(data.getColumnName())
 
 
 
+  msg: str = '''
+      1 - show        
+      2 - add med    
+      3 - modify med        
+      4 - search        
+      5 - remove    
+      6 - consume quantity
+      7 - add quantity
+      0 - exit
+  '''
 
-msg: str = '''
-    1 - show        
-    2 - add med    
-    3 - modify med        
-    4 - search        
-    5 - remove    
-    6 - consume quantity    
-    7 - add quantity
-    0 - exit
-'''
-
-menu: int = -1
-while (menu != 0):
-  try:
-    menu = int(input(msg))
-    match(menu):
-      case (1):
-        DataShower.showMenu()
-      case (2):
-        DataAdder.addMenu()
-      case (3):
-        DataModder.modifyMenu()
-      case (4):
-        DataFinder.searchMenu()
-      case (5):
-        DataRemover.removeMenu()
-      case (6):
-        DataRemover.consumeQuantityMenu()
-      case (7):
-        DataAdder.expandQuantityMenu()
-  except ValueError:
-    print("The input is not an integer type")
-    menu = -1
-  finally:
-    if menu == -1 or menu > 7 or menu < 0:
-      print("only numbers between 0 and 7 are allowed")
+  menu: int = -1
+  while (menu != 0):
+    try:
+      menu = int(input(msg))
+      match(menu):
+        case (1):
+          DataShower.showMenu()
+        case (2):
+          DataAdder.addMenu()
+        case (3):
+          DataModder.modifyMenu()
+        case (4):
+          DataFinder.searchMenu()
+        case (5):
+          DataRemover.removeMenu()
+        case (6):
+          DataRemover.consumeQuantityMenu()
+        case (7):
+          DataAdder.expandQuantityMenu()
+    except ValueError:
+      print("The input is not an integer type")
+      menu = -1
+    finally:
+      if menu == -1 or menu > 7 or menu < 0:
+        print("only numbers between 0 and 7 are allowed")
 
 # data.printData('*')
 # cursor.execute(f"INSERT INTO stocks\
