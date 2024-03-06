@@ -1,7 +1,7 @@
 from DB import *
 
 from tkinter import *
-from tkinter.ttk import *
+from tkinter.ttk import Treeview
 
 command = ['SHOW COLUMNS', 
            'FROM stocks']
