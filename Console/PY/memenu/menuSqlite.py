@@ -43,6 +43,11 @@ class RDB():
         # self.colnames = self.getColumnName()
         # self.data = self.getData()
 
+    def __del__(self):
+        print('wdwdwd')
+        pass
+        # self.database.
+    
     def createTable(self, table: str = 'stocks') -> None:
         self.table = table
         try:
@@ -356,9 +361,12 @@ class DataAdder:
         0 - back
   '''
   @staticmethod
-  def addMenu():
+  def addMenu(ldata = None ,labelle: str = '', description: str = '', quantity: str = '', price: str = ''):
     print('''add''')
-    labelle = input('Enter labelle')
+    if labelle == '':
+      labelle = input('Enter labelle')
+    if ldata != None:
+        data = ldata
     if data.existsLabelle(labelle):
       ans = input(f'label {labelle} already exists if you want to add a quantity enter q if want to change price enter p if both enter qp')
       if ans == 'p':
@@ -369,9 +377,12 @@ class DataAdder:
       print(f'the item with name : {labelle} got an addition in quantity by {quantity}')
       return
 
-    description = input('Enter description')
-    quantity = int(input('Enter quantity'))
-    price = float(input('Enter price'))
+    if description == '':
+      description = input('Enter description')
+    if quantity == '':
+      quantity = int(input('Enter quantity'))
+    if price == '':
+      price = float(input('Enter price'))
     
       
     data.insert(labelle, description, quantity, price)

@@ -18,7 +18,7 @@ def empty():
     
     
 err = NONE
-def OpenDir(node = '', path = os.path.abspath('..\\Workdir')):
+def OpenDir(node = '', path = os.path.abspath('Data')):
     # Iterate over directories in the current path
     try:
         for dir_name in os.listdir(path):
@@ -47,20 +47,24 @@ def OpenDir(node = '', path = os.path.abspath('..\\Workdir')):
         btnClose.pack(fill="both")
         
 
-def OpenDirLoaded(dirNAme: str = ''):
+def OpenDirLoaded(dirNAme: str = '', shouldAsk: bool = True):
     
-    path = filedialog.askdirectory(initialdir=ap.workdir)
-        
+    print("Im done with this maaan!!-_-")
+    if shouldAsk:
+        path = filedialog.askdirectory(initialdir=ap.workdir)
+    else:
+        path = ap.workdir
     # if path == '':
         # path = os.path.abspath('')
     
+    print(path)
     
     ClearFileTable()
-  
+    path = path.replace("\\", "/")
     if dirNAme == '':
         dirName = path.split("/")[-1]
     # path = os.path.abspath('')
-    node_id = ap.treeFile.insert('', "end", text=dirName, values= path ,open=False)
+    node_id = ap.treeFile.insert('', "end", text=dirName, values= path ,open=True, tags="Parent")
     OpenDir(node_id, path)
     
 def ClearTable():
@@ -102,10 +106,14 @@ class TableApplication:
         self.mainFrame.pack(fill="both", padx=5, pady=5, expand=1)
         
     def newFileAction(self, name):
-      fName = name.get()
-      f = open(self.workdir + '/' + fName+'.db','w')
-      raise Exception('make it clean')
-      f.close()
+        fName = name.get()
+        f = open(self.workdir + '/' + fName+'.db','w')
+        f.close()
+        OpenDirLoaded('', False)
+        
+        # self.InitFile()
+        #   raise Exception('make it clean')
+        
       
     def newFile(self):
         top = Toplevel(self.app)
@@ -121,20 +129,42 @@ class TableApplication:
     def on_window_resize(self, event):
         self.winWidth = int(event.width)
         self.winHeight = int(event.height)
+    def addItemAction(self, Labelle, Description, Quantity, Price):
+        lbl = Labelle.get()
+        dsc = Description.get()
+        qtt = Quantity.get()
+        prc = Price.get()
+        DataAdder().addMenu(self.data ,lbl, dsc, qtt, prc)
+
+    def addItem(self):
+        top = Toplevel(self.app)
+        Labelle = Entry(top)
+        Labelle.pack(fill="x", expand=True)
+        Description = Entry(top)
+        Description.pack(fill="x", expand=True)
+        Quantity = Entry(top)
+        Quantity.pack(fill="x", expand=True)
+        Price = Entry(top)
+        Price.pack(fill="x", expand=True)
+        # inp = Labelle.
+        
+        btn = Button(top,text='reload', command=lambda: [ self.addItemAction(Labelle, Description, Quantity, Price), top.destroy()])
+        btn.pack(fill="x", expand=True)
 
     def AddFileMenu(self):
         menu = Menu(self.app)
         filemenu = Menu(menu, tearoff=0)
         filemenu.add_command(label="New File", command=self.newFile)
         filemenu.add_command(label="Reload File", command=self.InitFile)
-        filemenu.add_command(label="Open File", command='OpenFile')
+        # filemenu.add_command(label="Open File", command='OpenFile')
         filemenu.add_command(label="Open Directory", command='self.OpenDir')
-        filemenu.add_command(label="Save File", command='''SaveFile''')
+        filemenu.add_command(label="Save File", command='''SaveFil/
+                             e''')
         filemenu.add_separator()
         filemenu.add_command(label="Exit", command=self.app.quit)
         menu.add_cascade(label="File", menu=filemenu)
         filemenu1 = Menu(menu, tearoff=0)
-        # filemenu1.add_command(label="AddItem", command=self.add)
+        filemenu1.add_command(label="AddItem", command=self.addItem)
         filemenu1.add_command(label="RemoveItem", command='')
         filemenu1.add_command(label="ModifyItem", command='')
         filemenu1.add_command(label="ReloadItems", command='')
@@ -160,9 +190,16 @@ class TableApplication:
     #         ap.treeTable.insert('', END, values=contact)
     
     def InitFile(self):
-        ap.file = self.filepath
+        # ap.file = self.filepath
         # print(ap.file)
+
         ClearTable()
+        
+        self.data = None
+        self.data = RDB(self.fileName)
+        self.databaseTable = 'stocks'
+
+        self.data.createTable(self.databaseTable)
 
         items = self.data.getData()
         for item in items:
@@ -202,19 +239,28 @@ class TableApplication:
     def get_selected_item_File(self, event):        
         selected_items = self.treeFile.selection()  # Get the IDs of selected items
         for item in selected_items:
-            item_text = self.treeFile.item(item, "value")[0]  # Get the value of each selected item
-            children = self.treeFile.get_children(item)
+            item_value = self.treeFile.item(item, "value")[0]
+            try:
+                print('sccccccccccccccccccccccccccccs', self.treeFile.item(item, "tags"))
+                isParent = self.treeFile.item(item, "tags")[0] == 'Parent'
+                 # Get the value of each selected item
+                if(isParent):
+                    print('Can only Open files')
+                    return
+            except IndexError as e:
+                print('(get_selected_item_File(), item.tags)contains no tag')
             
             
-            self.fileName = os.path.relpath(item_text)
+            self.fileName = os.path.relpath(item_value)
             self.InitFile()
+            # children = self.treeFile.get_children(item)
             # if len(children) == 0:
-            #     if(str(item_text).endswith(".db")):
-            #         print("Openning file:", item_text)
+            #     if(str(item_value).endswith(".db")):
+            #         print("Openning file:", item_value)
             #         print(item)
-            #         'OpenFile(item_text)'
+            #         'OpenFile(item_value)'
             #     else:
-            #         print("Can't open file:", item_text)
+            #         print("Can't open file:", item_value)
 
 
     def InitTable(self):
