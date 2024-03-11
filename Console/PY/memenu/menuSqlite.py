@@ -31,49 +31,54 @@ import sqlite3
 
 
 def warn(*kwarg):
-    print(kwarg)
+  print(kwarg)
 
 
 class RDB():
     def __init__(self, databaseName: str = 'MedStocks.db') -> None:
-        self.databaseName = databaseName
-        self.database = sqlite3.connect(databaseName)
-        self.cursor = self.database.cursor()
-        self.table = 'stocks'
-        # self.colnames = self.getColumnName()
-        # self.data = self.getData()
+      self.databaseName = databaseName
+      self.database = sqlite3.connect(databaseName)
+      self.cursor = self.database.cursor()
+      self.table = 'stocks'
+      # self.colnames = self.getColumnName()
+      # self.data = self.getData()
 
     def __del__(self):
-        print('wdwdwd')
-        pass
-        # self.database.
+      print('wdwdwd')
+      pass
+      # self.database.
     
     def createTable(self, table: str = 'stocks') -> None:
-        self.table = table
-        try:
-            self.cursor.execute(f""" CREATE TABLE IF NOT EXISTS {table} (
+      self.table = table
+      try:
+          self.cursor.execute(f""" CREATE TABLE IF NOT EXISTS {table} (
 
-                                ref INTEGER PRIMARY KEY AUTOINCREMENT,
-                                labelle VARCHAR(50) NOT NULL,
-                                description VARCHAR(50),
-                                quantity INT,
-                                price FLOAT
+                              ref INTEGER PRIMARY KEY AUTOINCREMENT,
+                              labelle VARCHAR(50) NOT NULL,
+                              description VARCHAR(50),
+                              quantity INT,
+                              price FLOAT
 
-                            ); """)
+                          ); """)
 
-            self.database.commit()
-        except Exception as e:
-            print('wdwd',e)
+          self.save()
+      except Exception as e:
+          print('wdwd',e)
+
+    def save(self):
+      print(f"DB : {self.databaseName} has been saved successfully")
+      self.database.commit()
 
     def insertWithRef(self, ref: int, labelle: str, description: str, quantity: int, price: float):
-        self.execLines("INSERT INTO stocks",
-                              f"VALUES ( {ref}, '{labelle}', '{description}', {quantity}, {price})")
-        self.database.commit()
+      raise Exception("still hasn't implemented yet!")
+      self.execLines("INSERT INTO stocks",
+                            f"VALUES ( {ref}, '{labelle}', '{description}', {quantity}, {price})")
+      # self.save()
 
     def insert(self, labelle: str, description: str, quantity: int, price: float):
         self.execLines("INSERT INTO stocks(labelle, description, quantity, price)",
                               f"VALUES ( '{labelle}', '{description}', {quantity}, {price})")
-        self.database.commit()
+        self.save()
 
     def execLinesFetched(self, *lines):
         """fetch all from exec without altering current cursor value"""
@@ -98,10 +103,6 @@ class RDB():
     def execList(self, arr: list[str]):
         cmd = ' '.join(arr)
         self.cursor.execute(cmd)
-
-    def apply(self):
-        warn("You have commited to the database")
-        self.database.commit()
 
     def fetchAll(self):
         return self.cursor.fetchall()
@@ -154,7 +155,7 @@ class RDB():
                    WHERE ref = {ref};
         '''
         self.cursor.execute(update)
-        self.database.commit()
+        self.save()
 
     def modifyColByRef(self, ref: int, col, content):
         if not(self.existsRef(ref)):
@@ -165,7 +166,7 @@ class RDB():
                    WHERE ref = {ref};
         '''
         self.cursor.execute(update)
-        self.database.commit()
+        self.save()
 
     def modifyColByLabelle(self, labelle: str, col, content):
         if not(self.existsLabelle(labelle)):
@@ -177,7 +178,7 @@ class RDB():
                    WHERE labelle = "{labelle}";
         '''
         self.cursor.execute(update)
-        self.database.commit()
+        self.save()
 
     def modifyAllByLabelle(self, oldLabel: str, labelle: str, description: str, quantity: int, price: float):
         if not(self.existsLabelle(oldLabel)):
@@ -191,27 +192,27 @@ class RDB():
                    WHERE labelle = '{oldLabel}';
         '''
         self.cursor.execute(update)
-        self.database.commit()
+        self.save()
 
     
 
     def removeAll(self):
         self.cursor.execute(f"DELETE FROM {self.table};")
-        self.database.commit()
+        self.save()
         
     def removeByRef(self, ref: int):
         if not(self.existsRef(ref)):
             print(f"{ref =} doesn't exist")
             return
         self.cursor.execute(f"DELETE FROM {self.table} WHERE ref = {ref};")
-        self.database.commit()
+        self.save()
         
     def removeByLabelle(self, labelle: str):
         if not(self.existsLabelle(labelle)):
             print(f"{labelle =} doesn't exist")
             return
         self.cursor.execute(f"DELETE FROM {self.table} WHERE labelle = '{labelle}';")
-        self.database.commit()
+        self.save()
 
     def checkForQuantityByRef(self, ref: int, quantity: int):
         if not(self.existsRef(ref)):
@@ -238,7 +239,7 @@ class RDB():
                            WHERE ref = {ref};
                 '''
         self.cursor.execute(update)
-        self.database.commit()
+        self.save()
         
     def consumeByLabelle(self, labelle: str, quantity: int):
         if not(self.existsLabelle(labelle)):
@@ -253,7 +254,7 @@ class RDB():
                                    WHERE labelle = "{labelle};
                         '''
         self.cursor.execute(update)
-        self.database.commit()
+        self.save()
 
     def addQuantityByRef(self, ref: int, quantity: int):
         if not(self.existsRef(ref)):
@@ -264,7 +265,7 @@ class RDB():
                            WHERE ref = {ref};
                 '''
         self.cursor.execute(update)
-        self.database.commit()
+        self.save()
         
     def addQuantityByLabelle(self, labelle: str, quantity: int):
         if not(self.existsLabelle(labelle)):
@@ -275,7 +276,7 @@ class RDB():
                                    WHERE labelle = "{labelle}";
                         '''
         self.cursor.execute(update)
-        self.database.commit()
+        self.save()
 
     def printData(self, cols: str = '*'):
         for item in self.getData(cols):
@@ -361,32 +362,110 @@ class DataAdder:
         0 - back
   '''
   @staticmethod
-  def addMenu(ldata = None ,labelle: str = '', description: str = '', quantity: str = '', price: str = ''):
+  def addMenu(ldata = None, labelle: str = '', description: str = '', quantity: int = 0, price: float = 0.0, action: str=''):
+    """@action => p = add price; q = modify price; qp = both"""
+    global data
     print('''add''')
     if labelle == '':
       labelle = input('Enter labelle')
     if ldata != None:
         data = ldata
     if data.existsLabelle(labelle):
-      ans = input(f'label {labelle} already exists if you want to add a quantity enter q if want to change price enter p if both enter qp')
-      if ans == 'p':
-        data.modifyAllByLabelle()
-        return
-      quantity = int(input('Enter quantity to add'))
-      DataAdder.expandQuantityMenu(quantity)
-      print(f'the item with name : {labelle} got an addition in quantity by {quantity}')
-      return
+      if ( action == ''):
+        action = input(f'label {labelle} already exists if you want to add a quantity enter q; if want to change price enter p; if both enter qp')
+
+      match (action):
+        case ('q'):
+          if(quantity == 0):
+            quantity = int(input('Enter quantity to add'))
+          data.addQuantityByLabelle(labelle, quantity)
+          print(f'the item with name : {labelle} got an addition in quantity by {quantity}')
+          return
+        case ('p'):
+          if(price == 0.0):
+            price = float(input('Important! Erase old Price; Enter the new price'))
+          data.modifyColByLabelle(labelle, 'price', price)
+          print(f'the item\'s new price = {price}')
+          return
+        case ('qp'):
+          if(quantity == 0):
+            quantity = int(input('Enter quantity to add'))
+          if(price == 0.0):
+            price = float(input('Important! Erase old Price; Enter the new price'))
+          data.addQuantityByLabelle(labelle, quantity)
+          print(f'the item with name : {labelle} got an addition in quantity by {quantity}')
+          data.modifyColByLabelle(labelle, 'price', price)
+          print(f'the item\'s new price = {price}')
+          return
+        case _:
+          raise Exception('action should not be different than p, q, qp')
+      
 
     if description == '':
       description = input('Enter description')
-    if quantity == '':
+    if quantity == 0:
       quantity = int(input('Enter quantity'))
-    if price == '':
+    if price == 0.0:
       price = float(input('Enter price'))
     
       
     data.insert(labelle, description, quantity, price)
     
+    
+    
+  @staticmethod
+  def addMenuUICheck(ldata = None, labelle: str = ''):
+    """ @function shall return => p = add price; q = modify price; qp = both """
+    global data
+    print('''add''')
+    if ldata != None:
+        data = ldata
+    if data.existsLabelle(labelle):
+      return False
+    return True
+      
+      
+  @staticmethod
+  def addMenuUI(ldata = None, labelle: str = '', description: str = '', quantity: int = 0, price: float = 0.0, action = ''):
+    """ @function shall return => p = add price; q = modify price; qp = both """
+    global data
+    print('''add''')
+    if ldata != None:
+      data = ldata
+    if data.existsLabelle(labelle):
+      if action=='':
+        raise Exception('maaan coome on')
+     
+      match (action):
+        case ('q'):
+          if(quantity == 0):
+            raise Exception("quantity to add shall not be 0")
+          data.addQuantityByLabelle(labelle, quantity)
+          print(f'the item with name : {labelle} got an addition in quantity by {quantity}')
+          return
+        case ('p'):
+          if(price == 0.0):
+            raise Exception("price shall not be 0")
+          data.modifyColByLabelle(labelle, 'price', price)
+          print(f'the item\'s new price = {price}')
+          return
+        case ('qp'):
+          if(quantity == 0):
+            raise Exception("quantity to add shall not be 0")
+          if(price == 0.0):
+            raise Exception("price shall not be 0")
+          data.addQuantityByLabelle(labelle, quantity)
+          print(f'the item with name : {labelle} got an addition in quantity by {quantity}')
+          data.modifyColByLabelle(labelle, 'price', price)
+          print(f'the item\'s new price = {price}')
+          return
+        case _:
+          raise Exception('action should not be different than p, q, qp')
+      
+    data.insert(labelle, description, quantity, price)
+
+
+
   @staticmethod
   def expandQuantityMenu():
     '''add quantity'''
@@ -646,7 +725,8 @@ class DataRemover:
 if __name__ == '__main__':
   data = RDB('data/MedStocks.db')
   data.createTable()
-
+  data.save()
+  
   # data.insert("Nothing", "I said it is nothing", 0, 0.0)
   # data.modifyRef(5, "fifth one modified", "Nodesc yet", 69, 6969)
   print(data.getColumnName())
