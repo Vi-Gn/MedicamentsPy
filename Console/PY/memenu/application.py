@@ -9,9 +9,11 @@ class Application():
     # initialize databases files name
     self.fileName: list[str] = []
     self.fileName.append('MedStocks.db')
+    
     # load databases
     self.data: RDB = []
     self.data.append(RDB(self.fileName))
+    
     self.filepath = os.path.abspath(f"Data/")
     
     self.databaseTable = 'stocks'

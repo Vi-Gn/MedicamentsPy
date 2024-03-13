@@ -59,7 +59,7 @@ class RDB():
                               quantity INT,
                               price FLOAT
 
-                          ); """)
+                  ); """)
 
           self.save()
       except Exception as e:

@@ -116,7 +116,7 @@ class TableApplication:
         self.app.title(self.title)
         self.app.iconbitmap(iconPath)
         self.app.geometry(self.resolution)
-        self.app.minsize(width= 740, height= 450)
+        self.app.minsize(width= 1024, height= 450)
         # self.app.maxsize(width= 680, height= 450)
         self.workdirName = 'Data'
         self.workdir = os.path.abspath(f"{self.workdirName}")
@@ -126,7 +126,8 @@ class TableApplication:
         self.app.bind("<Configure>", self.on_window_resize)
         self.mainFrame = ttk.LabelFrame(self.app, text="App")
         self.mainFrame.grid_rowconfigure(0, weight=1)
-        self.mainFrame.grid_columnconfigure(1, weight=1)
+        self.mainFrame.grid_columnconfigure(0, minsize=250, weight=0)
+        self.mainFrame.grid_columnconfigure(1, minsize=700, weight=1)
         self.mainFrame.pack(fill="both", padx=5, pady=5, expand=1)
                 
     def setDarkTheme(self, themeName):
