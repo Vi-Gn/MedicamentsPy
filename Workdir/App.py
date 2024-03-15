@@ -103,8 +103,6 @@ def OpenDir(node = '', path = os.path.abspath('..\\Workdir')):
         btnClose.pack(fill="both")
         
 
-def empty():
-    0
 
 class TableApplication:
     def __init__(self, title: str, resX: int, resY: int, iconPath = 'Icon/meds.ico') -> None:

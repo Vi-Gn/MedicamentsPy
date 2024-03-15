@@ -102,8 +102,8 @@ class TableApplication:
         self.app = tk.Tk()
         
         self.style = ttk.Style(self.app)
-        # self.setDarkTheme('dark')
-        self.setDarkTheme('light')
+        self.setDarkTheme('dark')
+        # self.setDarkTheme('light')
 
         # self.app.configure(bg='#000')
         # self.app.configure(bg="grey80")
